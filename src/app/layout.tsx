@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./fonts.css";
-import { ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { theme } from '../theme';
-
-
+import { ThemeProvider } from '../contexts/ThemeContext';
+import { getTheme } from '../theme';
+import ThemeWrapper from './ThemeWrapper';
 
 export const metadata: Metadata = {
   title: "سامانه سفیران کالارسان",
@@ -73,9 +73,10 @@ export default function RootLayout({
       <head>
       </head>
       <body style={{ fontFamily: 'IranSansX' }}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          {children}
+        <ThemeProvider>
+          <ThemeWrapper>
+            {children}
+          </ThemeWrapper>
         </ThemeProvider>
       </body>
     </html>

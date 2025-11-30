@@ -36,10 +36,8 @@ export default function Navbar({ title, showLogout = false }: NavbarProps) {
     <AppBar 
       position="static" 
       sx={{ 
-        backgroundColor: 'white', 
-        color: 'black',
-        boxShadow: 'none',
-        borderBottom: '1px solid #e0e0e0',
+        backgroundColor: 'background.paper',
+        color: 'text.primary',
         position: 'relative',
         maxWidth: '600px',
         margin: '0 auto',

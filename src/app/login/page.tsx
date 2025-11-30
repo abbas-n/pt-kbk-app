@@ -90,7 +90,7 @@ export default function LoginPage() {
   return (
     <>
       <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{ color: 'common.white', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={isLoading}
       >
         <CircularProgress color="inherit" />
@@ -102,7 +102,7 @@ export default function LoginPage() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+          backgroundColor: 'background.default',
           position: 'fixed',
           top: 0,
           left: 0,
@@ -118,7 +118,7 @@ export default function LoginPage() {
               width: '100%',
               maxWidth: 400,
               borderRadius: 3,
-              background: 'rgba(255, 255, 255, 0.95)',
+              backgroundColor: 'background.paper',
               mx: 'auto',
             }}
           >

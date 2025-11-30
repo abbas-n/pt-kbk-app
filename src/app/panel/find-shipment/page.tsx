@@ -204,7 +204,7 @@ export default function FindShipmentPage() {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
       <Navbar title="" showLogout={false} />
       <Container maxWidth="md" sx={{ py: 3 }}>
         <SearchForm

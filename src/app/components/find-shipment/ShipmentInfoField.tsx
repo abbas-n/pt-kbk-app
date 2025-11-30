@@ -24,15 +24,11 @@ export default function ShipmentInfoField({
         elevation={0}
         sx={{
           p: 1.5,
-          bgcolor: '#f8f9fa',
+          bgcolor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.02)',
           display: 'flex',
           alignItems: 'center',
           gap: 1.5,
-          transition: 'all 0.2s ease',
-          '&:hover': {
-            bgcolor: '#e9ecef',
-            transform: 'translateX(4px)',
-          },
+          mx: 0.25,
         }}
       >
         <Box

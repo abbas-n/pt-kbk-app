@@ -75,9 +75,12 @@ export default function ShipmentCard({ shipment, referringId, onRefer }: Shipmen
       sx={{
         mb: 3,
         borderRadius: 2,
-        boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
+        boxShadow: (theme) => theme.palette.mode === 'dark' 
+          ? '0 4px 16px rgba(0,0,0,0.3)' 
+          : '0 4px 16px rgba(0,0,0,0.12)',
         border: '1px solid',
         borderColor: 'divider',
+        bgcolor: 'background.paper',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         position: 'relative',
         overflow: 'hidden',
@@ -91,7 +94,9 @@ export default function ShipmentCard({ shipment, referringId, onRefer }: Shipmen
           bgcolor: 'primary.main',
         },
         '&:hover': {
-          boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
+          boxShadow: (theme) => theme.palette.mode === 'dark' 
+            ? '0 8px 24px rgba(0,0,0,0.4)' 
+            : '0 8px 24px rgba(0,0,0,0.18)',
           transform: 'translateY(-4px)',
         },
       }}
@@ -113,7 +118,7 @@ export default function ShipmentCard({ shipment, referringId, onRefer }: Shipmen
               sx={{
                 p: 1.5,
                 borderRadius: 2,
-                bgcolor: 'primary.light',
+                bgcolor: 'primary.main',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',

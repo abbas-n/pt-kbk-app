@@ -166,7 +166,7 @@ export default function ActiveShipmentsPage() {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
       <Navbar showLogout={false} />
       <Container maxWidth="md" sx={{ py: 3 }}>
         <Paper
@@ -175,7 +175,7 @@ export default function ActiveShipmentsPage() {
             p: 1.5,
             mb: 2,
             borderRadius: 2,
-            bgcolor: 'white',
+            bgcolor: 'background.paper',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -217,7 +217,7 @@ export default function ActiveShipmentsPage() {
               p: 4,
               textAlign: 'center',
               borderRadius: 2,
-              bgcolor: 'white',
+              bgcolor: 'background.paper',
             }}
           >
             <LocalShippingIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
@@ -237,7 +237,7 @@ export default function ActiveShipmentsPage() {
                   mb: 2.5,
                   p: 2,
                   borderRadius: 2,
-                  bgcolor: 'white',
+                  bgcolor: 'background.paper',
                   border: '1px solid',
                   borderColor: 'divider',
                 }}
@@ -276,7 +276,7 @@ export default function ActiveShipmentsPage() {
                   p: 4,
                   textAlign: 'center',
                   borderRadius: 2,
-                  bgcolor: 'white',
+                  bgcolor: 'background.paper',
                 }}
               >
                 <SearchIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
@@ -295,11 +295,13 @@ export default function ActiveShipmentsPage() {
                     key={shipment.ID}
                     sx={{
                       mb: 3,
-                      borderRadius: 3,
-                      boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
+                      borderRadius: 2,
+                      boxShadow: (theme) => theme.palette.mode === 'dark' 
+                        ? '0 4px 16px rgba(0,0,0,0.3)' 
+                        : '0 4px 16px rgba(0,0,0,0.12)',
                       border: '1px solid',
                       borderColor: 'divider',
-                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      bgcolor: 'background.paper',
                       position: 'relative',
                       overflow: 'hidden',
                       '&::before': {
@@ -311,10 +313,6 @@ export default function ActiveShipmentsPage() {
                         width: '100%',
                         height: '4px',
                         bgcolor: 'primary.main',
-                      },
-                      '&:hover': {
-                        boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
-                        transform: 'translateY(-4px)',
                       },
                     }}
                   >
@@ -370,7 +368,7 @@ export default function ActiveShipmentsPage() {
                       </Box>
 
                       {isExpanded && (
-                        <Grid container sx={{ mb: 2.5 }}>
+                        <Grid container sx={{ mb: 1 }}>
                           {shipment.receiver_realname && (
                             <ShipmentInfoField
                               label="گیرنده"

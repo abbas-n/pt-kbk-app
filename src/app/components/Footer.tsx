@@ -44,9 +44,10 @@ export default function Footer() {
         width: '100%',
         maxWidth: '600px',
         zIndex: 1000,
-        borderTop: '1px solid #e0e0e0',
+        borderTop: (theme) => `1px solid ${theme.palette.divider}`,
         overflow: 'hidden',
-        fontFamily: 'var(--font-vazirmatn)'
+        fontFamily: 'var(--font-vazirmatn)',
+        backgroundColor: 'background.paper',
       }} 
       elevation={3}
     >

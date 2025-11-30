@@ -13,7 +13,7 @@ export default function EmptyState({ onOpenSearch }: EmptyStateProps) {
         p: 5,
         textAlign: 'center',
         borderRadius: 3,
-        bgcolor: 'white',
+        bgcolor: 'background.paper',
         border: '1px solid',
         borderColor: 'divider',
       }}

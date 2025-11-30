@@ -33,6 +33,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import Navbar from '../../components/Navbar';
 import { FetchApi, thousandDivider } from '../../../../utils/Helper';
 import SnackbarComp from '../../components/SnackbarComp';
+import CompletedShipmentInfoField from './CompletedShipmentInfoField';
 
 interface CompletedShipment {
   ID: string;
@@ -190,7 +191,7 @@ export default function CompletedShipmentsPage() {
   });
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
       <Navbar showLogout={false} />
       <Container maxWidth="md" sx={{ py: 3 }}>
         <Paper
@@ -199,7 +200,7 @@ export default function CompletedShipmentsPage() {
             p: 3,
             mb: 3,
             borderRadius: 2,
-            bgcolor: 'white',
+            bgcolor: 'background.paper',
           }}
         >
           <Box
@@ -243,7 +244,7 @@ export default function CompletedShipmentsPage() {
                           fullWidth: true,
                           sx: {
                             '& .MuiInputLabel-root': {
-                              backgroundColor: 'white',
+                              backgroundColor: 'background.paper',
                               padding: '0 4px',
                               borderRadius: '4px'
                             }
@@ -266,7 +267,7 @@ export default function CompletedShipmentsPage() {
                           fullWidth: true,
                           sx: {
                             '& .MuiInputLabel-root': {
-                              backgroundColor: 'white',
+                              backgroundColor: 'background.paper',
                               padding: '0 4px',
                               borderRadius: '4px'
                             }
@@ -327,7 +328,7 @@ export default function CompletedShipmentsPage() {
               p: 4,
               textAlign: 'center',
               borderRadius: 2,
-              bgcolor: 'white',
+              bgcolor: 'background.paper',
             }}
           >
             <LocalShippingIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
@@ -354,7 +355,7 @@ export default function CompletedShipmentsPage() {
                         mb: 2.5,
                         p: 2.5,
                         borderRadius: 2,
-                        bgcolor: 'white',
+                        bgcolor: 'background.paper',
                         border: '1px solid',
                         borderColor: 'divider',
                         display: 'flex',
@@ -369,7 +370,7 @@ export default function CompletedShipmentsPage() {
                           sx={{
                             p: 1.2,
                             borderRadius: 2,
-                            bgcolor: 'primary.light',
+                            bgcolor: 'primary.main',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -420,7 +421,7 @@ export default function CompletedShipmentsPage() {
                         mb: 2.5,
                         p: 2,
                         borderRadius: 2,
-                        bgcolor: 'white',
+                        bgcolor: 'background.paper',
                         border: '1px solid',
                         borderColor: 'divider',
                       }}
@@ -461,7 +462,7 @@ export default function CompletedShipmentsPage() {
                   p: 4,
                   textAlign: 'center',
                   borderRadius: 2,
-                  bgcolor: 'white',
+                  bgcolor: 'background.paper',
                 }}
               >
                 <SearchIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
@@ -481,10 +482,12 @@ export default function CompletedShipmentsPage() {
                   sx={{
                     mb: 1.5,
                     borderRadius: 2,
-                    boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+                    boxShadow: (theme) => theme.palette.mode === 'dark' 
+                      ? '0 2px 12px rgba(0,0,0,0.3)' 
+                      : '0 2px 12px rgba(0,0,0,0.08)',
                     border: '1px solid',
                     borderColor: 'divider',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    bgcolor: 'background.paper',
                     position: 'relative',
                     overflow: 'hidden',
                     '&::before': {
@@ -495,10 +498,6 @@ export default function CompletedShipmentsPage() {
                       width: '100%',
                       height: '4px',
                       bgcolor: 'primary.main',
-                    },
-                    '&:hover': {
-                      transform: 'translateY(-4px)',
-                      boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
                     },
                   }}
                 >
@@ -521,7 +520,7 @@ export default function CompletedShipmentsPage() {
                           sx={{
                             p: 1.2,
                             borderRadius: 2,
-                            bgcolor: 'primary.light',
+                            bgcolor: 'primary.main',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -542,349 +541,92 @@ export default function CompletedShipmentsPage() {
                     </Box>
 
                     {isExpanded && (
-                      <Grid container  >
+                      <Grid container>
                         {shipment.bill_num && (
-                          <Grid xs={12}>
-                            <Paper
-                              elevation={0}
-                              sx={{
-                                p: 1,
-                                mb: 0.5,
-                                bgcolor: '#f8f9fa',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 1.5,
-                                borderRadius: 2,
-                                transition: 'all 0.2s ease',
-                                '&:hover': {
-                                  bgcolor: '#e9ecef',
-                                  transform: 'translateX(4px)',
-                                },
-                              }}
-                            >
-                              <Box
-                                sx={{
-                                  p: 1,
-                                  borderRadius: 1.5,
-                                  bgcolor: 'info.main',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                }}
-                              >
-                                <LocalShippingIcon sx={{ color: 'white', fontSize: 20 }} />
-                              </Box>
-                              <Box>
-                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
-                                  شماره بارنامه ورودی
-                                </Typography>
-                                <Typography variant="body2" sx={{ fontWeight: 600, mt: 0.25 }}>
-                                  {shipment.bill_num}
-                                </Typography>
-                              </Box>
-                            </Paper>
-                          </Grid>
+                          <CompletedShipmentInfoField
+                            label="شماره بارنامه ورودی"
+                            value={shipment.bill_num}
+                            icon={<LocalShippingIcon sx={{ color: 'white', fontSize: 20 }} />}
+                            iconBgColor="info.main"
+                            xs={12}
+                          />
                         )}
 
                         {shipment.receiver_realname && (
-                          <Grid xs={12} sm={6}>
-                            <Paper
-                              elevation={0}
-                              sx={{
-                                p: 1,
-                                mb: 0.5,
-                                bgcolor: '#f8f9fa',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 1.5,
-                                borderRadius: 2,
-                                transition: 'all 0.2s ease',
-                                '&:hover': {
-                                  bgcolor: '#e9ecef',
-                                  transform: 'translateX(4px)',
-                                },
-                              }}
-                            >
-                              <Box
-                                sx={{
-                                  p: 1,
-                                  borderRadius: 1.5,
-                                  bgcolor: 'primary.main',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                }}
-                              >
-                                <PersonIcon sx={{ color: 'white', fontSize: 20 }} />
-                              </Box>
-                              <Box>
-                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
-                                  گیرنده
-                                </Typography>
-                                <Typography variant="body2" sx={{ fontWeight: 600, mt: 0.25 }}>
-                                  {shipment.receiver_realname}
-                                </Typography>
-                              </Box>
-                            </Paper>
-                          </Grid>
+                          <CompletedShipmentInfoField
+                            label="گیرنده"
+                            value={shipment.receiver_realname}
+                            icon={<PersonIcon sx={{ color: 'white', fontSize: 20 }} />}
+                            iconBgColor="primary.main"
+                            xs={12}
+                            sm={6}
+                          />
                         )}
 
                         {shipment.receiver_tel && (
-                          <Grid xs={12} sm={6}>
-                            <Paper
-                              elevation={0}
-                              sx={{
-                                p: 1,
-                                mb: 0.5,
-                                bgcolor: '#f8f9fa',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 1.5,
-                                borderRadius: 2,
-                                transition: 'all 0.2s ease',
-                                '&:hover': {
-                                  bgcolor: '#e9ecef',
-                                  transform: 'translateX(4px)',
-                                },
-                              }}
-                            >
-                              <Box
-                                sx={{
-                                  p: 1,
-                                  borderRadius: 1.5,
-                                  bgcolor: 'success.main',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                }}
-                              >
-                                <PersonIcon sx={{ color: 'white', fontSize: 20 }} />
-                              </Box>
-                              <Box>
-                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
-                                  تلفن گیرنده
-                                </Typography>
-                                <Typography variant="body2" sx={{ fontWeight: 600, mt: 0.25, dir: 'ltr', textAlign: 'right' }}>
-                                  {shipment.receiver_tel}
-                                </Typography>
-                              </Box>
-                            </Paper>
-                          </Grid>
+                          <CompletedShipmentInfoField
+                            label="تلفن گیرنده"
+                            value={shipment.receiver_tel}
+                            icon={<PersonIcon sx={{ color: 'white', fontSize: 20 }} />}
+                            iconBgColor="success.main"
+                            xs={12}
+                            sm={6}
+                            isRtl={true}
+                          />
                         )}
 
                         {shipment.originKargo && (
-                          <Grid xs={12} sm={6}>
-                            <Paper
-                              elevation={0}
-                              sx={{
-                                p: 1,
-                                mb: 0.5,
-                                bgcolor: '#f8f9fa',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 1.5,
-                                borderRadius: 2,
-                                transition: 'all 0.2s ease',
-                                '&:hover': {
-                                  bgcolor: '#e9ecef',
-                                  transform: 'translateX(4px)',
-                                },
-                              }}
-                            >
-                              <Box
-                                sx={{
-                                  p: 1,
-                                  borderRadius: 1.5,
-                                  bgcolor: 'error.main',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                }}
-                              >
-                                <LocationOnIcon sx={{ color: 'white', fontSize: 20 }} />
-                              </Box>
-                              <Box>
-                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
-                                  مبدا
-                                </Typography>
-                                <Typography variant="body2" sx={{ fontWeight: 600, mt: 0.25 }}>
-                                  {shipment.originKargo}
-                                </Typography>
-                              </Box>
-                            </Paper>
-                          </Grid>
+                          <CompletedShipmentInfoField
+                            label="مبدا"
+                            value={shipment.originKargo}
+                            icon={<LocationOnIcon sx={{ color: 'white', fontSize: 20 }} />}
+                            iconBgColor="error.main"
+                            xs={12}
+                            sm={6}
+                          />
                         )}
 
                         {shipment.targetKargo && (
-                          <Grid xs={12} sm={6}>
-                            <Paper
-                              elevation={0}
-                              sx={{
-                                p: 1,
-                                mb: 0.5,
-                                bgcolor: '#f8f9fa',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 1.5,
-                                borderRadius: 2,
-                                transition: 'all 0.2s ease',
-                                '&:hover': {
-                                  bgcolor: '#e9ecef',
-                                  transform: 'translateX(4px)',
-                                },
-                              }}
-                            >
-                              <Box
-                                sx={{
-                                  p: 1,
-                                  borderRadius: 1.5,
-                                  bgcolor: 'warning.main',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                }}
-                              >
-                                <LocationOnIcon sx={{ color: 'white', fontSize: 20 }} />
-                              </Box>
-                              <Box>
-                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
-                                  مقصد
-                                </Typography>
-                                <Typography variant="body2" sx={{ fontWeight: 600, mt: 0.25 }}>
-                                  {shipment.targetKargo}
-                                </Typography>
-                              </Box>
-                            </Paper>
-                          </Grid>
+                          <CompletedShipmentInfoField
+                            label="مقصد"
+                            value={shipment.targetKargo}
+                            icon={<LocationOnIcon sx={{ color: 'white', fontSize: 20 }} />}
+                            iconBgColor="warning.main"
+                            xs={12}
+                            sm={6}
+                          />
                         )}
 
                         {shipment.pay_by && (
-                          <Grid xs={12} sm={6}>
-                            <Paper
-                              elevation={0}
-                              sx={{
-                                p: 1,
-                                mb: 0.5,
-                                bgcolor: '#f8f9fa',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 1.5,
-                                borderRadius: 2,
-                                transition: 'all 0.2s ease',
-                                '&:hover': {
-                                  bgcolor: '#e9ecef',
-                                  transform: 'translateX(4px)',
-                                },
-                              }}
-                            >
-                              <Box
-                                sx={{
-                                  p: 1,
-                                  borderRadius: 1.5,
-                                  bgcolor: 'secondary.main',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                }}
-                              >
-                                <AttachMoneyIcon sx={{ color: 'white', fontSize: 20 }} />
-                              </Box>
-                              <Box>
-                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
-                                  پرداخت کننده
-                                </Typography>
-                                <Typography variant="body2" sx={{ fontWeight: 600, mt: 0.25 }}>
-                                  {shipment.pay_by === 'Sender' ? 'پیش کرایه' : shipment.pay_by === 'Receiver' ? 'پس کرایه' : shipment.pay_by}
-                                </Typography>
-                              </Box>
-                            </Paper>
-                          </Grid>
+                          <CompletedShipmentInfoField
+                            label="پرداخت کننده"
+                            value={shipment.pay_by === 'Sender' ? 'پیش کرایه' : shipment.pay_by === 'Receiver' ? 'پس کرایه' : shipment.pay_by}
+                            icon={<AttachMoneyIcon sx={{ color: 'white', fontSize: 20 }} />}
+                            iconBgColor="secondary.main"
+                            xs={12}
+                            sm={6}
+                          />
                         )}
 
                         {shipment.insert_time && (
-                          <Grid xs={12} sm={6}>
-                            <Paper
-                              elevation={0}
-                              sx={{
-                                p: 1,
-                                mb: 0.5,
-                                bgcolor: '#f8f9fa',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 1.5,
-                                borderRadius: 2,
-                                transition: 'all 0.2s ease',
-                                '&:hover': {
-                                  bgcolor: '#e9ecef',
-                                  transform: 'translateX(4px)',
-                                },
-                              }}
-                            >
-                              <Box
-                                sx={{
-                                  p: 1,
-                                  borderRadius: 1.5,
-                                  bgcolor: 'info.main',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                }}
-                              >
-                                <CalendarTodayIcon sx={{ color: 'white', fontSize: 20 }} />
-                              </Box>
-                              <Box>
-                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
-                                  زمان ترخیص
-                                </Typography>
-                                <Typography variant="body2" sx={{ fontWeight: 600, mt: 0.25 }}>
-                                  {formatTimestampToJalali(shipment.insert_time) || 'نامشخص'}
-                                </Typography>
-                              </Box>
-                            </Paper>
-                          </Grid>
+                          <CompletedShipmentInfoField
+                            label="زمان ترخیص"
+                            value={formatTimestampToJalali(shipment.insert_time) || 'نامشخص'}
+                            icon={<CalendarTodayIcon sx={{ color: 'white', fontSize: 20 }} />}
+                            iconBgColor="info.main"
+                            xs={12}
+                            sm={6}
+                          />
                         )}
 
                         {shipment.receiver_address && (
-                          <Grid xs={12}>
-                            <Paper
-                              elevation={0}
-                              sx={{
-                                p: 1,
-                                mb: 0.5,
-                                bgcolor: '#f8f9fa',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 1.5,
-                                borderRadius: 2,
-                                transition: 'all 0.2s ease',
-                                '&:hover': {
-                                  bgcolor: '#e9ecef',
-                                  transform: 'translateX(4px)',
-                                },
-                              }}
-                            >
-                              <Box
-                                sx={{
-                                  p: 1,
-                                  borderRadius: 1.5,
-                                  bgcolor: 'secondary.main',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                }}
-                              >
-                                <HomeIcon sx={{ color: 'white', fontSize: 20 }} />
-                              </Box>
-                              <Box>
-                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
-                                  آدرس گیرنده
-                                </Typography>
-                                <Typography variant="body2" sx={{ fontWeight: 600, mt: 0.25 }}>
-                                  {shipment.receiver_address}
-                                </Typography>
-                              </Box>
-                            </Paper>
-                          </Grid>
+                          <CompletedShipmentInfoField
+                            label="آدرس گیرنده"
+                            value={shipment.receiver_address}
+                            icon={<HomeIcon sx={{ color: 'white', fontSize: 20 }} />}
+                            iconBgColor="secondary.main"
+                            xs={12}
+                          />
                         )}
 
                         {shipment.peyk_wage && (
@@ -900,11 +642,6 @@ export default function CompletedShipmentsPage() {
                                 alignItems: 'center',
                                 gap: 1.5,
                                 boxShadow: '0 4px 14px rgba(102, 126, 234, 0.4)',
-                                transition: 'all 0.3s ease',
-                                '&:hover': {
-                                  boxShadow: '0 6px 20px rgba(102, 126, 234, 0.5)',
-                                  transform: 'translateY(-2px)',
-                                },
                               }}
                             >
                               <Box

@@ -32,7 +32,7 @@ export default function PanelLayout({
       maxWidth: '600px',
       margin: '0 auto',
       position: 'relative',
-      background: 'linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%)',
+      backgroundColor: 'background.default',
     }}>
       {/* <FirebaseMessaging /> */}
       <Box sx={{ 

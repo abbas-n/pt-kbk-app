@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Box, Paper, Typography, CircularProgress, Alert, Divider, Chip, Button } from '@mui/material';
+import { Box, Paper, Typography, CircularProgress, Alert, Divider, Chip, Button, Switch, FormControlLabel } from '@mui/material';
 import { FetchApi } from '../../../../utils/Helper';
 import PersonIcon from '@mui/icons-material/Person';
 import PhoneIcon from '@mui/icons-material/Phone';
@@ -11,9 +11,12 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
 import { SvgIconComponent } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import SnackbarComp from '../../components/SnackbarComp';
+import { useTheme } from '../../../contexts/ThemeContext';
 
 interface UserInfo {
   ID: string;
@@ -26,6 +29,7 @@ interface UserInfo {
 
 export default function ProfilePage() {
   const router = useRouter();
+  const { mode, toggleTheme } = useTheme();
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -76,32 +80,29 @@ export default function ProfilePage() {
       display: 'flex',
       alignItems: 'center',
       gap: 1.5,
-      py: 1,
-      px: 1.5,
-      borderRadius: 1.5,
-      transition: 'all 0.2s ease',
-      '&:hover': {
-        bgcolor: 'rgba(25, 118, 210, 0.04)',
-      }
+      py: 1.25,
+      px: 1,
+      borderRadius: 1,
+      transition: 'background-color 0.2s ease',
     }}>
       <Box sx={{
-        bgcolor: 'rgba(25, 118, 210, 0.1)',
+        bgcolor: 'rgba(25, 118, 210, 0.08)',
         p: 0.75,
-        borderRadius: 1.25,
+        borderRadius: 1,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        minWidth: 36,
-        height: 36
+        minWidth: 40,
+        height: 40
       }}>
-        <Icon sx={{ color: 'primary.main', fontSize: 18 }} />
+        <Icon sx={{ color: 'primary.main', fontSize: 20 }} />
       </Box>
       <Box sx={{ flex: 1, minWidth: 0 }}>
-        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.25, fontSize: '0.75rem' }}>
+        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.5, fontSize: '0.75rem' }}>
           {label}
         </Typography>
         {customValue || (
-          <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary' }}>
+          <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary', fontSize: '0.9rem' }}>
             {value || 'ثبت نشده'}
           </Typography>
         )}
@@ -110,35 +111,30 @@ export default function ProfilePage() {
   );
 
   return (
-    <Box sx={{ height: '100vh', bgcolor: '#fafafa', py: 1, overflow: 'auto' }}>
-      <Box sx={{ px: 2, maxWidth: 700, mx: 'auto' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: 3, overflow: 'auto' }}>
+      <Box sx={{ px: 2, maxWidth: 600, mx: 'auto' }}>
         <Paper
           elevation={0}
           sx={{
-            p: 2,
-            borderRadius: 2,
-            bgcolor: 'white',
-            border: '1px solid rgba(0, 0, 0, 0.08)'
+            p: 3,
+            borderRadius: 3,
+            bgcolor: 'background.paper',
+            border: (theme) => `1px solid ${theme.palette.divider}`
           }}
         >
+          {/* Header Section */}
           <Box sx={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            mb: 1.5,
-            gap: 0.75
+            mb: 3,
+            pb: 2.5,
+            borderBottom: (theme) => `1px solid ${theme.palette.divider}`
           }}>
-            <Box sx={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: 1,
-              mb: 0.5
-            }}>
-              <AccountCircleIcon sx={{ color: 'primary.main', fontSize: 24 }} />
-              <Typography variant="h6" sx={{ fontWeight: 600, fontSize: '1.1rem' }}>
-                {userInfo?.name || 'کاربر'}
-              </Typography>
-            </Box>
+            <AccountCircleIcon sx={{ color: 'primary.main', fontSize: 56, mb: 1 }} />
+            <Typography variant="h5" sx={{ fontWeight: 600, mb: 1, fontSize: '1.25rem' }}>
+              {userInfo?.name || 'کاربر'}
+            </Typography>
             <Chip
               icon={userInfo?.status === 'Active' ? <CheckCircleIcon sx={{ fontSize: 16 }} /> : <CancelIcon sx={{ fontSize: 16 }} />}
               label={userInfo?.status === 'Active' ? 'حساب فعال' : 'حساب غیرفعال'}
@@ -160,20 +156,21 @@ export default function ProfilePage() {
             />
           </Box>
 
+          {/* Loading/Error/Content */}
           {loading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
-              <CircularProgress size={28} />
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+              <CircularProgress size={32} />
             </Box>
           ) : error ? (
-            <Alert severity="error" sx={{ mb: 1.5, borderRadius: 1.5 }}>
+            <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>
               {error}
             </Alert>
           ) : userInfo ? (
-            <Box>
-              <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600, color: 'text.secondary', fontSize: '0.875rem', px: 1.5 }}>
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: 'text.primary', fontSize: '0.95rem' }}>
                 اطلاعات حساب
               </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.25 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                 <InfoRow icon={PersonIcon} label="نام" value={userInfo.name} />
                 <InfoRow icon={BadgeIcon} label="کد سفیر" value={userInfo.ID} />
                 <InfoRow icon={PhoneIcon} label="شماره موبایل" value={userInfo.mobile} />
@@ -187,43 +184,104 @@ export default function ProfilePage() {
             </Box>
           ) : null}
 
+          {/* Safir Status */}
           {safirStatus && (
             <Box sx={{
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              mt: 1.5,
-              py: 1,
-              borderRadius: 1,
-              bgcolor: 'rgba(0, 0, 0, 0.02)'
+              mb: 3,
+              py: 1.5,
+              px: 2,
+              borderRadius: 2,
+              bgcolor: 'action.hover'
             }}>
-              <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.8rem' }}>
-                وضعیت سفیر: {safirStatus}
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.85rem' }}>
+                وضعیت سفیر: <strong>{safirStatus}</strong>
               </Typography>
             </Box>
           )}
 
+          {/* Theme Toggle Section */}
+          <Box
+            onClick={toggleTheme}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              p: 2,
+              mb: 2,
+              borderRadius: 2,
+              bgcolor: 'action.hover',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              border: (theme) => `1px solid ${theme.palette.divider}`,
+              '&:hover': {
+                bgcolor: 'action.selected',
+                transform: 'translateY(-1px)',
+                boxShadow: (theme) => `0 2px 8px ${theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.1)'}`
+              }
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Box sx={{
+                bgcolor: 'primary.main',
+                p: 1,
+                borderRadius: 1.5,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 44,
+                height: 44
+              }}>
+                {mode === 'dark' ? (
+                  <DarkModeIcon sx={{ color: 'white', fontSize: 22 }} />
+                ) : (
+                  <LightModeIcon sx={{ color: 'white', fontSize: 22 }} />
+                )}
+              </Box>
+              <Box>
+                <Typography variant="body1" sx={{ fontWeight: 600, color: 'text.primary', fontSize: '0.95rem' }}>
+                  {mode === 'dark' ? 'تم تاریک' : 'تم روشن'}
+                </Typography>
+                <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.75rem' }}>
+                  برای تغییر تم کلیک کنید
+                </Typography>
+              </Box>
+            </Box>
+            <Switch
+              checked={mode === 'dark'}
+              onChange={(e) => {
+                e.stopPropagation();
+                toggleTheme();
+              }}
+              onClick={(e) => e.stopPropagation()}
+              color="primary"
+            />
+          </Box>
+
+          {/* Logout Button */}
           <Button
             variant="outlined"
             fullWidth
             startIcon={<LogoutIcon />}
             onClick={handleLogout}
             sx={{
-              mt: 1.5,
-              py: 1,
+              py: 1.25,
               borderColor: 'error.main',
               color: 'error.main',
-              borderRadius: 1.5,
+              borderRadius: 2,
               textTransform: 'none',
               fontSize: '0.9rem',
-              gap: 1,
+              fontWeight: 500,
               '& .MuiButton-startIcon': {
                 marginRight: 0,
                 marginLeft: 0.5
               },
               '&:hover': {
                 borderColor: 'error.dark',
-                bgcolor: 'rgba(211, 47, 47, 0.04)',
+                bgcolor: 'error.light',
+                color: 'error.dark',
               },
             }}
           >

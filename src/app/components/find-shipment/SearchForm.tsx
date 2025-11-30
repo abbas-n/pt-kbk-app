@@ -63,8 +63,10 @@ export default function SearchForm({
       sx={{
         mb: 1,
         borderRadius: 2,
-        bgcolor: 'white',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+        bgcolor: 'background.paper',
+        boxShadow: (theme) => theme.palette.mode === 'dark' 
+          ? '0 4px 20px rgba(0,0,0,0.3)' 
+          : '0 4px 20px rgba(0,0,0,0.08)',
         overflow: 'hidden',
       }}
     >
@@ -151,20 +153,24 @@ export default function SearchForm({
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
-                      backgroundColor: '#fafafa',
+                      backgroundColor: (theme) => theme.palette.mode === 'dark' 
+                        ? 'rgba(255, 255, 255, 0.05)' 
+                        : 'rgba(0, 0, 0, 0.02)',
                       transition: 'all 0.3s ease',
                       '& fieldset': {
                         borderWidth: '2px',
-                        borderColor: '#e0e0e0',
+                        borderColor: 'divider',
                       },
                       '&:hover': {
-                        backgroundColor: '#f5f5f5',
+                        backgroundColor: (theme) => theme.palette.mode === 'dark' 
+                          ? 'rgba(255, 255, 255, 0.08)' 
+                          : 'rgba(0, 0, 0, 0.04)',
                         '& fieldset': {
                           borderColor: 'primary.main',
                         },
                       },
                       '&.Mui-focused': {
-                        backgroundColor: 'white',
+                        backgroundColor: 'background.paper',
                         '& fieldset': {
                           borderColor: 'primary.main',
                           borderWidth: '2px',
@@ -196,20 +202,24 @@ export default function SearchForm({
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
-                      backgroundColor: '#fafafa',
+                      backgroundColor: (theme) => theme.palette.mode === 'dark' 
+                        ? 'rgba(255, 255, 255, 0.05)' 
+                        : 'rgba(0, 0, 0, 0.02)',
                       transition: 'all 0.3s ease',
                       '& fieldset': {
                         borderWidth: '2px',
-                        borderColor: '#e0e0e0',
+                        borderColor: 'divider',
                       },
                       '&:hover': {
-                        backgroundColor: '#f5f5f5',
+                        backgroundColor: (theme) => theme.palette.mode === 'dark' 
+                          ? 'rgba(255, 255, 255, 0.08)' 
+                          : 'rgba(0, 0, 0, 0.04)',
                         '& fieldset': {
                           borderColor: 'primary.main',
                         },
                       },
                       '&.Mui-focused': {
-                        backgroundColor: 'white',
+                        backgroundColor: 'background.paper',
                         '& fieldset': {
                           borderColor: 'primary.main',
                           borderWidth: '2px',
@@ -235,20 +245,24 @@ export default function SearchForm({
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
-                      backgroundColor: '#fafafa',
+                      backgroundColor: (theme) => theme.palette.mode === 'dark' 
+                        ? 'rgba(255, 255, 255, 0.05)' 
+                        : 'rgba(0, 0, 0, 0.02)',
                       transition: 'all 0.3s ease',
                       '& fieldset': {
                         borderWidth: '2px',
-                        borderColor: '#e0e0e0',
+                        borderColor: 'divider',
                       },
                       '&:hover': {
-                        backgroundColor: '#f5f5f5',
+                        backgroundColor: (theme) => theme.palette.mode === 'dark' 
+                          ? 'rgba(255, 255, 255, 0.08)' 
+                          : 'rgba(0, 0, 0, 0.04)',
                         '& fieldset': {
                           borderColor: 'primary.main',
                         },
                       },
                       '&.Mui-focused': {
-                        backgroundColor: 'white',
+                        backgroundColor: 'background.paper',
                         '& fieldset': {
                           borderColor: 'primary.main',
                           borderWidth: '2px',
@@ -280,20 +294,24 @@ export default function SearchForm({
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
-                      backgroundColor: '#fafafa',
+                      backgroundColor: (theme) => theme.palette.mode === 'dark' 
+                        ? 'rgba(255, 255, 255, 0.05)' 
+                        : 'rgba(0, 0, 0, 0.02)',
                       transition: 'all 0.3s ease',
                       '& fieldset': {
                         borderWidth: '2px',
-                        borderColor: '#e0e0e0',
+                        borderColor: 'divider',
                       },
                       '&:hover': {
-                        backgroundColor: '#f5f5f5',
+                        backgroundColor: (theme) => theme.palette.mode === 'dark' 
+                          ? 'rgba(255, 255, 255, 0.08)' 
+                          : 'rgba(0, 0, 0, 0.04)',
                         '& fieldset': {
                           borderColor: 'primary.main',
                         },
                       },
                       '&.Mui-focused': {
-                        backgroundColor: 'white',
+                        backgroundColor: 'background.paper',
                         '& fieldset': {
                           borderColor: 'primary.main',
                           borderWidth: '2px',
