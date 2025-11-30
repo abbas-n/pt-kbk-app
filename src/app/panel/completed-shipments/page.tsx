@@ -115,20 +115,33 @@ export default function CompletedShipmentsPage() {
       const res = await FetchApi('/tpShipment/getCompletedShipments', 'POST', true, JSON.stringify(body));
 
       if (res.status === 200) {
-        setShipments(res.data.shipments || []);
-        if (!res.data.shipments || res.data.shipments.length === 0) {
+        const shipmentsData = res.data.shipments || [];
+        if (shipmentsData.length === 0) {
+          // پاک کردن نتایج قبلی
+          setShipments([]);
           setSnackbarMSG('در بازه زمانی انتخاب شده نتیجه‌ای یافت نشد');
           setErrorSBOpen(true);
         } else {
+          setShipments(shipmentsData);
           // بستن باکس جستجو وقتی نتایج لود می‌شود
           setSearchBoxOpen(false);
         }
+      } else if (res.status === 404) {
+        // پاک کردن نتایج قبلی وقتی 404 می‌آید
+        setShipments([]);
+        setError(null);
+        setSnackbarMSG('در بازه زمانی انتخاب شده نتیجه‌ای یافت نشد');
+        setErrorSBOpen(true);
       } else {
+        // پاک کردن نتایج قبلی در صورت خطای دیگر
+        setShipments([]);
         setError(res.data?.message || 'خطا در دریافت گزارش');
         setSnackbarMSG(res.data?.message || 'خطا در دریافت گزارش');
         setErrorSBOpen(true);
       }
     } catch (err) {
+      // پاک کردن نتایج قبلی در صورت خطا
+      setShipments([]);
       setError('خطا در ارتباط با سرور');
       setSnackbarMSG('خطا در ارتباط با سرور');
       setErrorSBOpen(true);
