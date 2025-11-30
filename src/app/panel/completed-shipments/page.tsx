@@ -29,6 +29,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import HomeIcon from '@mui/icons-material/Home';
 import Navbar from '../../components/Navbar';
 import { FetchApi, thousandDivider } from '../../../../utils/Helper';
 import SnackbarComp from '../../components/SnackbarComp';
@@ -40,6 +41,7 @@ interface CompletedShipment {
   shipment_status_id: string;
   receiver_realname: string;
   receiver_tel: string;
+  receiver_address?: string;
   originKargo: string;
   targetKargo: string;
   pay_by: string;
@@ -836,6 +838,49 @@ export default function CompletedShipmentsPage() {
                                 </Typography>
                                 <Typography variant="body2" sx={{ fontWeight: 600, mt: 0.25 }}>
                                   {formatTimestampToJalali(shipment.insert_time) || 'نامشخص'}
+                                </Typography>
+                              </Box>
+                            </Paper>
+                          </Grid>
+                        )}
+
+                        {shipment.receiver_address && (
+                          <Grid xs={12}>
+                            <Paper
+                              elevation={0}
+                              sx={{
+                                p: 1,
+                                mb: 0.5,
+                                bgcolor: '#f8f9fa',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 1.5,
+                                borderRadius: 2,
+                                transition: 'all 0.2s ease',
+                                '&:hover': {
+                                  bgcolor: '#e9ecef',
+                                  transform: 'translateX(4px)',
+                                },
+                              }}
+                            >
+                              <Box
+                                sx={{
+                                  p: 1,
+                                  borderRadius: 1.5,
+                                  bgcolor: 'secondary.main',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                }}
+                              >
+                                <HomeIcon sx={{ color: 'white', fontSize: 20 }} />
+                              </Box>
+                              <Box>
+                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
+                                  آدرس گیرنده
+                                </Typography>
+                                <Typography variant="body2" sx={{ fontWeight: 600, mt: 0.25 }}>
+                                  {shipment.receiver_address}
                                 </Typography>
                               </Box>
                             </Paper>

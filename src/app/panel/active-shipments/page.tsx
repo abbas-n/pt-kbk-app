@@ -20,6 +20,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import PhoneIcon from '@mui/icons-material/Phone';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import HomeIcon from '@mui/icons-material/Home';
 import Navbar from '../../components/Navbar';
 import { FetchApi } from '../../../../utils/Helper';
 import SnackbarComp from '../../components/SnackbarComp';
@@ -33,6 +34,7 @@ interface ActiveShipment {
   status_title?: string;
   receiver_realname?: string;
   receiver_tel?: string;
+  receiver_address?: string;
   originKargo?: string;
   targetKargo?: string;
   pay_by?: string;
@@ -70,6 +72,7 @@ export default function ActiveShipmentsPage() {
           status_title: shipment.status_title,
           receiver_realname: shipment.receiver_realname || shipment['4'],
           receiver_tel: shipment.receiver_tel || shipment['5'],
+          receiver_address: shipment.receiver_address,
           originKargo: shipment.originKargo || shipment['6'],
           targetKargo: shipment.targetKargo || shipment['7'],
           pay_by: shipment.pay_by || shipment['8'],
@@ -298,6 +301,17 @@ export default function ActiveShipmentsPage() {
                         value={shipment.targetKargo}
                         icon={<LocationOnIcon sx={{ color: 'white', fontSize: 20 }} />}
                         iconBgColor="warning.main"
+                      />
+                    )}
+
+                    {shipment.receiver_address && (
+                      <ShipmentInfoField
+                        label="آدرس گیرنده"
+                        value={shipment.receiver_address}
+                        icon={<HomeIcon sx={{ color: 'white', fontSize: 20 }} />}
+                        iconBgColor="secondary.main"
+                        xs={12}
+                        sm={12}
                       />
                     )}
                   </Grid>
