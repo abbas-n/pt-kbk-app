@@ -14,6 +14,8 @@ import {
   Chip,
   Grid,
   IconButton,
+  TextField,
+  InputAdornment,
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import PersonIcon from '@mui/icons-material/Person';
@@ -21,6 +23,9 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import HomeIcon from '@mui/icons-material/Home';
+import SearchIcon from '@mui/icons-material/Search';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Navbar from '../../components/Navbar';
 import { FetchApi } from '../../../../utils/Helper';
 import SnackbarComp from '../../components/SnackbarComp';
@@ -50,6 +55,8 @@ export default function ActiveShipmentsPage() {
   const [error, setError] = useState<string | null>(null);
   const [errorSBOpen, setErrorSBOpen] = useState(false);
   const [snackbarMSG, setSnackbarMSG] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
 
   const fetchActiveShipments = async (isRefresh = false) => {
     if (isRefresh) {
@@ -102,6 +109,32 @@ export default function ActiveShipmentsPage() {
     fetchActiveShipments(true);
   };
 
+  const toggleCard = (cardId: string) => {
+    setExpandedCards((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(cardId)) {
+        newSet.delete(cardId);
+      } else {
+        newSet.add(cardId);
+      }
+      return newSet;
+    });
+  };
+
+  // Filter shipments based on search query
+  const filteredShipments = shipments.filter((shipment) => {
+    if (!searchQuery.trim()) return true;
+    const query = searchQuery.toLowerCase().trim();
+    const shipmentCode = (shipment.shipment_code || '').toLowerCase();
+    const billNum = (shipment.bill_num || '').toLowerCase();
+    const receiverName = (shipment.receiver_realname || '').toLowerCase();
+    return (
+      shipmentCode.includes(query) ||
+      billNum.includes(query) ||
+      receiverName.includes(query)
+    );
+  });
+
   const getStatusBadge = (statusTitle?: string, statusId?: string | number) => {
     if (statusTitle) {
       const statusNum = typeof statusId === 'string' ? parseInt(statusId) : statusId;
@@ -149,7 +182,7 @@ export default function ActiveShipmentsPage() {
           }}
         >
           <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'primary.main', fontSize: '0.95rem' }}>
-            بارنامه‌های فعال ({shipments.length})
+            بارنامه‌های فعال ({filteredShipments.length > 0 && searchQuery.trim() ? filteredShipments.length : shipments.length})
           </Typography>
           <IconButton
             onClick={handleRefresh}
@@ -197,127 +230,200 @@ export default function ActiveShipmentsPage() {
           </Paper>
         ) : (
           <Box>
-            {shipments.map((shipment) => (
-              <Card
-                key={shipment.ID}
+            {shipments.length > 0 && (
+              <Paper
+                elevation={0}
                 sx={{
-                  mb: 3,
-                  borderRadius: 3,
-                  boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
+                  mb: 2.5,
+                  p: 2,
+                  borderRadius: 2,
+                  bgcolor: 'white',
                   border: '1px solid',
                   borderColor: 'divider',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    width: '100%',
-                    height: '4px',
-                    bgcolor: 'primary.main',
-                  },
-                  '&:hover': {
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
-                    transform: 'translateY(-4px)',
-                  },
                 }}
               >
-                <CardContent sx={{ p: { xs: 2.5, sm: 3 }, pb: '0px !important' }}>
-                  <Box
+                <TextField
+                  fullWidth
+                  placeholder="جستجو بر اساس شماره بارنامه یا نام گیرنده..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon sx={{ color: 'text.secondary' }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 2,
+                      '&:hover fieldset': {
+                        borderColor: 'primary.main',
+                      },
+                      '&.Mui-focused fieldset': {
+                        borderColor: 'primary.main',
+                      },
+                    },
+                  }}
+                />
+              </Paper>
+            )}
+
+            {filteredShipments.length === 0 && searchQuery.trim() ? (
+              <Paper
+                elevation={1}
+                sx={{
+                  p: 4,
+                  textAlign: 'center',
+                  borderRadius: 2,
+                  bgcolor: 'white',
+                }}
+              >
+                <SearchIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
+                <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+                  نتیجه‌ای یافت نشد
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  با جستجوی "{searchQuery}" نتیجه‌ای پیدا نشد
+                </Typography>
+              </Paper>
+            ) : filteredShipments.length > 0 && (
+              filteredShipments.map((shipment) => {
+                const isExpanded = expandedCards.has(shipment.ID || '');
+                return (
+                  <Card
+                    key={shipment.ID}
                     sx={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'start',
-                      mb: 2,
-                      pb: 2,
-                      borderBottom: '2px solid',
+                      mb: 3,
+                      borderRadius: 3,
+                      boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
+                      border: '1px solid',
                       borderColor: 'divider',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        width: '100%',
+                        height: '4px',
+                        bgcolor: 'primary.main',
+                      },
+                      '&:hover': {
+                        boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
+                        transform: 'translateY(-4px)',
+                      },
                     }}
                   >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                    <CardContent sx={{ p: { xs: 2.5, sm: 3 }, pb: isExpanded ? '16px !important' : '16px !important' }}>
                       <Box
                         sx={{
-                          p: 1.5,
-                          borderRadius: 2,
-                          bgcolor: 'primary.main',
                           display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
+                          justifyContent: 'space-between',
+                          alignItems: 'start',
+                          mb: isExpanded ? 2 : 0,
+                          pb: isExpanded ? 2 : 0,
+                          borderBottom: isExpanded ? '2px solid' : 'none',
+                          borderColor: 'divider',
+                          cursor: 'pointer',
                         }}
+                        onClick={() => toggleCard(shipment.ID || '')}
                       >
-                        <LocalShippingIcon sx={{ color: 'white', fontSize: 28 }} />
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                          <Box
+                            sx={{
+                              p: 1.5,
+                              borderRadius: 2,
+                              bgcolor: 'primary.main',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                            }}
+                          >
+                            <LocalShippingIcon sx={{ color: 'white', fontSize: 28 }} />
+                          </Box>
+                          <Box>
+                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                              کد بارنامه
+                            </Typography>
+                            <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
+                              {shipment.shipment_code || 'بدون کد'}
+                            </Typography>
+                            {shipment.bill_num && isExpanded && (
+                              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+                                شماره بارنامه ورودی: {shipment.bill_num}
+                              </Typography>
+                            )}
+                          </Box>
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          {getStatusBadge(shipment.status_title, shipment.shipment_status_id)}
+                          {isExpanded ? (
+                            <ExpandLessIcon sx={{ color: 'text.secondary', ml: 1 }} />
+                          ) : (
+                            <ExpandMoreIcon sx={{ color: 'text.secondary', ml: 1 }} />
+                          )}
+                        </Box>
                       </Box>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
-                          کد بارنامه
-                        </Typography>
-                        <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
-                          {shipment.shipment_code || 'بدون کد'}
-                        </Typography>
-                        {shipment.bill_num && (
-                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
-                            شماره بارنامه ورودی: {shipment.bill_num}
-                          </Typography>
-                        )}
-                      </Box>
-                    </Box>
-                    {getStatusBadge(shipment.status_title, shipment.shipment_status_id)}
-                  </Box>
 
-                  <Grid container sx={{ mb: 2.5 }}>
-                    {shipment.receiver_realname && (
-                      <ShipmentInfoField
-                        label="گیرنده"
-                        value={shipment.receiver_realname}
-                        icon={<PersonIcon sx={{ color: 'white', fontSize: 20 }} />}
-                        iconBgColor="primary.main"
-                      />
-                    )}
+                      {isExpanded && (
+                        <Grid container sx={{ mb: 2.5 }}>
+                          {shipment.receiver_realname && (
+                            <ShipmentInfoField
+                              label="گیرنده"
+                              value={shipment.receiver_realname}
+                              icon={<PersonIcon sx={{ color: 'white', fontSize: 20 }} />}
+                              iconBgColor="primary.main"
+                            />
+                          )}
 
-                    {shipment.receiver_tel && (
-                      <ShipmentInfoField
-                        label="تماس گیرنده"
-                        value={shipment.receiver_tel}
-                        icon={<PhoneIcon sx={{ color: 'white', fontSize: 20 }} />}
-                        iconBgColor="success.main"
-                      />
-                    )}
+                          {shipment.receiver_tel && (
+                            <ShipmentInfoField
+                              label="تماس گیرنده"
+                              value={shipment.receiver_tel}
+                              icon={<PhoneIcon sx={{ color: 'white', fontSize: 20 }} />}
+                              iconBgColor="success.main"
+                            />
+                          )}
 
-                    {shipment.originKargo && (
-                      <ShipmentInfoField
-                        label="مبدا"
-                        value={shipment.originKargo}
-                        icon={<LocationOnIcon sx={{ color: 'white', fontSize: 20 }} />}
-                        iconBgColor="info.main"
-                      />
-                    )}
+                          {shipment.originKargo && (
+                            <ShipmentInfoField
+                              label="مبدا"
+                              value={shipment.originKargo}
+                              icon={<LocationOnIcon sx={{ color: 'white', fontSize: 20 }} />}
+                              iconBgColor="info.main"
+                            />
+                          )}
 
-                    {shipment.targetKargo && (
-                      <ShipmentInfoField
-                        label="مقصد"
-                        value={shipment.targetKargo}
-                        icon={<LocationOnIcon sx={{ color: 'white', fontSize: 20 }} />}
-                        iconBgColor="warning.main"
-                      />
-                    )}
+                          {shipment.targetKargo && (
+                            <ShipmentInfoField
+                              label="مقصد"
+                              value={shipment.targetKargo}
+                              icon={<LocationOnIcon sx={{ color: 'white', fontSize: 20 }} />}
+                              iconBgColor="warning.main"
+                            />
+                          )}
 
-                    {shipment.receiver_address && (
-                      <ShipmentInfoField
-                        label="آدرس گیرنده"
-                        value={shipment.receiver_address}
-                        icon={<HomeIcon sx={{ color: 'white', fontSize: 20 }} />}
-                        iconBgColor="secondary.main"
-                        xs={12}
-                        sm={12}
-                      />
-                    )}
-                  </Grid>
-                </CardContent>
-              </Card>
-            ))}
+                          {shipment.receiver_address && (
+                            <ShipmentInfoField
+                              label="آدرس گیرنده"
+                              value={shipment.receiver_address}
+                              icon={<HomeIcon sx={{ color: 'white', fontSize: 20 }} />}
+                              iconBgColor="secondary.main"
+                              xs={12}
+                              sm={12}
+                            />
+                          )}
+                        </Grid>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })
+            )}
           </Box>
         )}
       </Container>
