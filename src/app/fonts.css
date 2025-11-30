@@ -1,0 +1,38 @@
+@font-face {
+    font-family: 'IranSansX';
+    src: local('IranSansX'),
+         url('/fonts/IranSansX-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+@font-face {
+    font-family: 'Vazirmatn';
+    src: local('Vazirmatn'),
+         url('/fonts/Vazir.woff2') format('woff2'),
+         url('/fonts/Vazir.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: 'Vazirmatn';
+    src: local('Vazirmatn Medium'),
+         url('/fonts/Vazir-Medium.woff2') format('woff2'),
+         url('/fonts/Vazir-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: 'Vazirmatn';
+    src: local('Vazirmatn Bold'),
+         url('/fonts/Vazir-Bold.woff2') format('woff2'),
+         url('/fonts/Vazir-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
