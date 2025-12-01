@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Box, Paper, Typography, CircularProgress, Alert, Divider, Chip, Button, Switch, FormControlLabel, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
+import { Box, Paper, Typography, CircularProgress, Alert, Divider, Chip, Button, Switch, FormControlLabel, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Grid } from '@mui/material';
 import { FetchApi } from '../../../../utils/Helper';
 import PersonIcon from '@mui/icons-material/Person';
 import PhoneIcon from '@mui/icons-material/Phone';
@@ -18,6 +18,7 @@ import { SvgIconComponent } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import SnackbarComp from '../../components/SnackbarComp';
 import { useTheme } from '../../../contexts/ThemeContext';
+import Navbar from '../../components/Navbar';
 
 interface UserInfo {
   ID: string;
@@ -133,252 +134,314 @@ export default function ProfilePage() {
     return date.toLocaleDateString('fa-IR');
   };
 
-  const InfoRow = ({ icon: Icon, label, value, customValue }: {
+  const InfoCard = ({ icon: Icon, label, value, customValue }: {
     icon: SvgIconComponent,
     label: string,
     value: string | null,
     customValue?: React.ReactNode
   }) => (
-    <Box sx={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: 1.5,
-      py: 1.25,
-      px: 1,
-      borderRadius: 1,
-      transition: 'background-color 0.2s ease',
-    }}>
-      <Box sx={{
-        bgcolor: 'rgba(25, 118, 210, 0.08)',
-        p: 0.75,
-        borderRadius: 1,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minWidth: 40,
-        height: 40
-      }}>
-        <Icon sx={{ color: 'primary.main', fontSize: 20 }} />
-      </Box>
-      <Box sx={{ flex: 1, minWidth: 0 }}>
-        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.5, fontSize: '0.75rem' }}>
-          {label}
-        </Typography>
-        {customValue || (
-          <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary', fontSize: '0.9rem' }}>
-            {value || 'ثبت نشده'}
+    <Paper
+      elevation={0}
+      sx={{
+        p: 2,
+        borderRadius: 2,
+        bgcolor: 'background.paper',
+        border: (theme) => `1px solid ${theme.palette.divider}`,
+        height: '100%',
+        transition: 'all 0.2s ease',
+        '&:hover': {
+          borderColor: 'primary.main',
+          boxShadow: (theme) => `0 2px 8px ${theme.palette.mode === 'dark' ? 'rgba(25, 118, 210, 0.2)' : 'rgba(25, 118, 210, 0.1)'}`
+        }
+      }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+        <Box sx={{
+          bgcolor: (theme) => theme.palette.mode === 'dark' ? 'rgba(25, 118, 210, 0.2)' : 'rgba(25, 118, 210, 0.08)',
+          p: 1,
+          borderRadius: 1.5,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minWidth: 44,
+          height: 44
+        }}>
+          <Icon sx={{ color: 'primary.main', fontSize: 22 }} />
+        </Box>
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.75, fontSize: '0.75rem', fontWeight: 500 }}>
+            {label}
           </Typography>
-        )}
+          {customValue || (
+            <Typography variant="body1" sx={{ fontWeight: 600, color: 'text.primary', fontSize: '0.95rem', wordBreak: 'break-word' }}>
+              {value || 'ثبت نشده'}
+            </Typography>
+          )}
+        </Box>
       </Box>
-    </Box>
+    </Paper>
   );
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: 3, overflow: 'auto' }}>
-      <Box sx={{ px: 2, maxWidth: 600, mx: 'auto' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: { xs: 2, sm: 4 }, px: { xs: 1, sm: 2 } }}>
+      <Box sx={{ maxWidth: 900, mx: 'auto', pb: { xs: 4, sm: 6 } }}>
+        <Navbar />
+
+        {/* Header Section (without Avatar) */}
         <Paper
           elevation={0}
           sx={{
-            p: 3,
+            p: { xs: 2.5, sm: 4 },
+            mt: 2,
+            mb: 3,
             borderRadius: 3,
             bgcolor: 'background.paper',
-            border: (theme) => `1px solid ${theme.palette.divider}`
+            border: (theme) => `1px solid ${theme.palette.divider}`,
+            background: (theme) => 
+              theme.palette.mode === 'dark' 
+                ? `linear-gradient(135deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.paper} 100%)`
+                : `linear-gradient(135deg, rgba(25, 118, 210, 0.02) 0%, ${theme.palette.background.paper} 100%)`
           }}
         >
-          {/* Header Section */}
-          <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            mb: 3,
-            pb: 2.5,
-            borderBottom: (theme) => `1px solid ${theme.palette.divider}`
-          }}>
-            <AccountCircleIcon sx={{ color: 'primary.main', fontSize: 56, mb: 1 }} />
-            <Typography variant="h5" sx={{ fontWeight: 600, mb: 1, fontSize: '1.25rem' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textAlign: 'center',
+            }}
+          >
+            <Typography
+              variant="h4"
+              sx={{
+                fontWeight: 700,
+                mb: 1,
+                fontSize: { xs: '1.5rem', sm: '1.75rem' },
+              }}
+            >
               {userInfo?.name || 'کاربر'}
             </Typography>
-            <Chip
-              icon={userInfo?.status === 'Active' ? <CheckCircleIcon sx={{ fontSize: 16 }} /> : <CancelIcon sx={{ fontSize: 16 }} />}
-              label={userInfo?.status === 'Active' ? 'حساب فعال' : 'حساب غیرفعال'}
-              color={userInfo?.status === 'Active' ? 'success' : 'error'}
-              size="small"
-              sx={{
-                height: 26,
-                fontSize: '0.75rem',
-                px: 1,
-                '& .MuiChip-icon': {
-                  color: 'inherit',
-                  ml: 0.75,
-                  mr: 0.25
-                },
-                '& .MuiChip-label': {
-                  pl: 0.5
+            {userInfo && (
+              <Chip
+                icon={
+                  userInfo.status === 'Active' ? (
+                    <CheckCircleIcon sx={{ fontSize: 18 }} />
+                  ) : (
+                    <CancelIcon sx={{ fontSize: 18 }} />
+                  )
                 }
-              }}
-            />
+                label={userInfo.status === 'Active' ? 'حساب فعال' : 'حساب غیرفعال'}
+                color={userInfo.status === 'Active' ? 'success' : 'error'}
+                sx={{
+                  height: 32,
+                  fontSize: '0.875rem',
+                  px: 1.5,
+                  fontWeight: 600,
+                  '& .MuiChip-icon': {
+                    color: 'inherit',
+                    ml: 0.75,
+                    mr: 0.25,
+                  },
+                }}
+              />
+            )}
           </Box>
-
-          {/* Loading/Error/Content */}
-          {loading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-              <CircularProgress size={32} />
-            </Box>
-          ) : error ? (
-            <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>
-              {error}
-            </Alert>
-          ) : userInfo ? (
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: 'text.primary', fontSize: '0.95rem' }}>
-                اطلاعات حساب
-              </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                <InfoRow icon={PersonIcon} label="نام" value={userInfo.name} />
-                <InfoRow icon={BadgeIcon} label="کد سفیر" value={userInfo.ID} />
-                <InfoRow icon={PhoneIcon} label="شماره موبایل" value={userInfo.mobile} />
-                <InfoRow icon={BadgeIcon} label="کد ملی" value={userInfo.melli_code} />
-                <InfoRow
-                  icon={CalendarTodayIcon}
-                  label="تاریخ ثبت نام"
-                  value={formatDate(userInfo.date_created)}
-                />
-              </Box>
-            </Box>
-          ) : null}
-
-
-          {/* Change Password Section */}
-          <Box
-            onClick={handleOpenChangePasswordDialog}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              p: 2,
-              mb: 2,
-              borderRadius: 2,
-              bgcolor: 'action.hover',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              border: (theme) => `1px solid ${theme.palette.divider}`,
-              '&:hover': {
-                bgcolor: 'action.selected',
-                transform: 'translateY(-1px)',
-                boxShadow: (theme) => `0 2px 8px ${theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.1)'}`
-              }
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Box sx={{
-                bgcolor: 'primary.main',
-                p: 1,
-                borderRadius: 1.5,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 44,
-                height: 44
-              }}>
-                <LockIcon sx={{ color: 'white', fontSize: 22 }} />
-              </Box>
-              <Box>
-                <Typography variant="body1" sx={{ fontWeight: 600, color: 'text.primary', fontSize: '0.95rem' }}>
-                  تغییر رمز عبور
-                </Typography>
-                <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.75rem' }}>
-                  برای تغییر رمز عبور کلیک کنید
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-
-          {/* Theme Toggle Section */}
-          <Box
-            onClick={toggleTheme}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              p: 2,
-              mb: 2,
-              borderRadius: 2,
-              bgcolor: 'action.hover',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              border: (theme) => `1px solid ${theme.palette.divider}`,
-              '&:hover': {
-                bgcolor: 'action.selected',
-                transform: 'translateY(-1px)',
-                boxShadow: (theme) => `0 2px 8px ${theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.1)'}`
-              }
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Box sx={{
-                bgcolor: 'primary.main',
-                p: 1,
-                borderRadius: 1.5,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 44,
-                height: 44
-              }}>
-                {mode === 'dark' ? (
-                  <DarkModeIcon sx={{ color: 'white', fontSize: 22 }} />
-                ) : (
-                  <LightModeIcon sx={{ color: 'white', fontSize: 22 }} />
-                )}
-              </Box>
-              <Box>
-                <Typography variant="body1" sx={{ fontWeight: 600, color: 'text.primary', fontSize: '0.95rem' }}>
-                  {mode === 'dark' ? 'تم تاریک' : 'تم روشن'}
-                </Typography>
-                <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.75rem' }}>
-                  برای تغییر تم کلیک کنید
-                </Typography>
-              </Box>
-            </Box>
-            <Switch
-              checked={mode === 'dark'}
-              onChange={(e) => {
-                e.stopPropagation();
-                toggleTheme();
-              }}
-              onClick={(e) => e.stopPropagation()}
-              color="primary"
-            />
-          </Box>
-
-          {/* Logout Button */}
-          <Button
-            variant="outlined"
-            fullWidth
-            startIcon={<LogoutIcon />}
-            onClick={handleLogout}
-            sx={{
-              py: 1.25,
-              borderColor: 'error.main',
-              color: 'error.main',
-              borderRadius: 2,
-              textTransform: 'none',
-              fontSize: '0.9rem',
-              fontWeight: 500,
-              '& .MuiButton-startIcon': {
-                marginRight: 0,
-                marginLeft: 0.5
-              },
-              '&:hover': {
-                borderColor: 'error.dark',
-                bgcolor: 'error.light',
-                color: 'error.dark',
-              },
-            }}
-          >
-            خروج از حساب کاربری
-          </Button>
         </Paper>
+
+        {/* Loading/Error State */}
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+            <CircularProgress size={40} />
+          </Box>
+        ) : error ? (
+          <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>
+            {error}
+          </Alert>
+        ) : userInfo ? (
+          <>
+            {/* User Information Grid */}
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="h6" sx={{ mb: 2.5, fontWeight: 700, fontSize: '1.1rem', px: { xs: 1, sm: 0 } }}>
+                اطلاعات حساب کاربری
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <InfoCard icon={PersonIcon} label="نام" value={userInfo.name} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <InfoCard icon={BadgeIcon} label="کد سفیر" value={userInfo.ID} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <InfoCard icon={PhoneIcon} label="شماره موبایل" value={userInfo.mobile} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <InfoCard icon={BadgeIcon} label="کد ملی" value={userInfo.melli_code} />
+                </Grid>
+                <Grid item xs={12}>
+                  <InfoCard
+                    icon={CalendarTodayIcon}
+                    label="تاریخ ثبت نام"
+                    value={formatDate(userInfo.date_created)}
+                  />
+                </Grid>
+              </Grid>
+            </Box>
+
+            {/* Settings Section */}
+            <Paper
+              elevation={0}
+              sx={{
+                p: { xs: 2, sm: 3 },
+                borderRadius: 3,
+                bgcolor: 'background.paper',
+                border: (theme) => `1px solid ${theme.palette.divider}`,
+                mb: 3
+              }}
+            >
+              <Typography variant="h6" sx={{ mb: 2.5, fontWeight: 700, fontSize: '1.1rem' }}>
+                تنظیمات
+              </Typography>
+              
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {/* Change Password */}
+                <Paper
+                  elevation={0}
+                  onClick={handleOpenChangePasswordDialog}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    p: 2,
+                    borderRadius: 2,
+                    bgcolor: 'action.hover',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    border: (theme) => `1px solid ${theme.palette.divider}`,
+                    '&:hover': {
+                      bgcolor: 'action.selected',
+                      transform: 'translateY(-2px)',
+                      boxShadow: (theme) => `0 4px 12px ${theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.1)'}`,
+                      borderColor: 'primary.main'
+                    }
+                  }}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box sx={{
+                      bgcolor: (theme) => theme.palette.mode === 'dark' ? 'rgba(25, 118, 210, 0.2)' : 'rgba(25, 118, 210, 0.1)',
+                      p: 1.25,
+                      borderRadius: 2,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 48,
+                      height: 48
+                    }}>
+                      <LockIcon sx={{ color: 'primary.main', fontSize: 24 }} />
+                    </Box>
+                    <Box>
+                      <Typography variant="body1" sx={{ fontWeight: 600, color: 'text.primary', fontSize: '1rem', mb: 0.25 }}>
+                        تغییر رمز عبور
+                      </Typography>
+                      <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.8rem' }}>
+                        برای تغییر رمز عبور کلیک کنید
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Paper>
+
+                {/* Theme Toggle */}
+                <Paper
+                  elevation={0}
+                  onClick={toggleTheme}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    p: 2,
+                    borderRadius: 2,
+                    bgcolor: 'action.hover',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    border: (theme) => `1px solid ${theme.palette.divider}`,
+                    '&:hover': {
+                      bgcolor: 'action.selected',
+                      transform: 'translateY(-2px)',
+                      boxShadow: (theme) => `0 4px 12px ${theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.1)'}`,
+                      borderColor: 'primary.main'
+                    }
+                  }}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box sx={{
+                      bgcolor: (theme) => theme.palette.mode === 'dark' ? 'rgba(25, 118, 210, 0.2)' : 'rgba(25, 118, 210, 0.1)',
+                      p: 1.25,
+                      borderRadius: 2,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 48,
+                      height: 48
+                    }}>
+                      {mode === 'dark' ? (
+                        <DarkModeIcon sx={{ color: 'primary.main', fontSize: 24 }} />
+                      ) : (
+                        <LightModeIcon sx={{ color: 'primary.main', fontSize: 24 }} />
+                      )}
+                    </Box>
+                    <Box>
+                      <Typography variant="body1" sx={{ fontWeight: 600, color: 'text.primary', fontSize: '1rem', mb: 0.25 }}>
+                        {mode === 'dark' ? 'تم تاریک' : 'تم روشن'}
+                      </Typography>
+                      <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.8rem' }}>
+                        برای تغییر تم کلیک کنید
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Switch
+                    checked={mode === 'dark'}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      toggleTheme();
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                    color="primary"
+                    size="medium"
+                  />
+                </Paper>
+              </Box>
+            </Paper>
+
+            {/* Logout Button */}
+            <Button
+              variant="outlined"
+              fullWidth
+              startIcon={<LogoutIcon />}
+              onClick={handleLogout}
+              sx={{
+                py: 1.5,
+                borderColor: 'error.main',
+                color: 'error.main',
+                borderRadius: 2,
+                textTransform: 'none',
+                fontSize: '1rem',
+                fontWeight: 600,
+                '& .MuiButton-startIcon': {
+                  marginRight: 0,
+                  marginLeft: 0.5
+                },
+                '&:hover': {
+                  borderColor: 'error.dark',
+                  bgcolor: 'error.light',
+                  color: 'error.dark',
+                  transform: 'translateY(-1px)',
+                  boxShadow: (theme) => `0 4px 12px ${theme.palette.mode === 'dark' ? 'rgba(211, 47, 47, 0.3)' : 'rgba(211, 47, 47, 0.2)'}`
+                },
+              }}
+            >
+              خروج از حساب کاربری
+            </Button>
+          </>
+        ) : null}
       </Box>
 
       {/* Change Password Dialog */}
