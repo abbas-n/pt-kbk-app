@@ -183,10 +183,10 @@ export default function ProfilePage() {
   );
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: { xs: 2, sm: 4 }, px: { xs: 1, sm: 2 } }}>
-      <Box sx={{ maxWidth: 900, mx: 'auto', pb: { xs: 4, sm: 6 } }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
         <Navbar />
 
+      <Box sx={{ maxWidth: 900, mx: 'auto', pb: { xs: 4, sm: 6 }, px: { xs: 1, sm: 2 } }}>
         {/* Header Section (without Avatar) */}
         <Paper
           elevation={0}

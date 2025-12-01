@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Container,
@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Image from 'next/image';
-import { FetchApi, checkTokenValidation } from '../../../utils/Helper';
+import { FetchApi } from '../../../utils/Helper';
 import { useRouter } from 'next/navigation';
 import SnackbarComp from '../components/SnackbarComp';
 
@@ -36,22 +36,6 @@ export default function LoginPage() {
   const [succesSnackbarOpen, setSuccesSnackbarOpen] = useState(false);
   const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false);
   const [snackbarMSG, setSnackbarMSG] = useState('');
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const token = localStorage.getItem('utoken');
-      if (token) {
-        const isValid = await checkTokenValidation();
-        if (isValid) {
-          router.push('/panel');
-        } else {
-          localStorage.clear();
-          router.push('/login');
-        }
-      }
-    };
-    checkAuth();
-  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

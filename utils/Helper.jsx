@@ -62,7 +62,7 @@ export async function refreshTokens(url, method = 'POST', withToken = false, bod
 }
 export async function checkTokenValidation() {
     try {
-        const res = await fetch('https://safirapi.kalaresan1.ir/api/v1/auth/check-token', {
+        const res = await fetch('https://safirapi.kalaresan1.ir/api/v1/tpAuth/check-token', {
             method: 'GET',
             headers: {
                 'authorization': 'Bearer ' + localStorage.getItem('utoken'),
