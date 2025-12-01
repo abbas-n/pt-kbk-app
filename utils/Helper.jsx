@@ -61,22 +61,26 @@ export async function refreshTokens(url, method = 'POST', withToken = false, bod
 
 }
 export async function checkTokenValidation() {
-    let res = await fetch('https://safirapi.kalaresan1.ir/api/v1/auth/current', {
-        method: 'GET',
-        headers: {
-            'authorization': 'Bearer ' + localStorage.getItem('utoken'),
-            'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-    });
+    try {
+        const res = await fetch('https://safirapi.kalaresan1.ir/api/v1/auth/check-token', {
+            method: 'GET',
+            headers: {
+                'authorization': 'Bearer ' + localStorage.getItem('utoken'),
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
 
-    const status = res.status;
-    if (status !== 200) {
-        // localStorage.clear();
+        const status = res.status;
+        // در روت جدید، در صورت نامعتبر بودن یا انقضای توکن، 401 برمی‌گردد
+        if (status !== 200) {
+            return false;
+        }
+        return true;
+    } catch (error) {
+        console.log(error);
         return false;
     }
-    return true;
-
 }
 
 export function onlyNumber(input) {
