@@ -22,6 +22,7 @@ interface Shipment {
   final_price?: string;
   shipment_status_id?: string;
   status_title?: string;
+  pay_by?: string;
   // For backward compatibility and display
   id?: string;
   shipmentCode?: string;
@@ -59,7 +60,9 @@ export default function FindShipmentPage() {
   const [error, setError] = useState<string | null>(null);
   const [successSBOpen, setSuccessSBOpen] = useState(false);
   const [errorSBOpen, setErrorSBOpen] = useState(false);
+  const [infoSBOpen, setInfoSBOpen] = useState(false);
   const [snackbarMSG, setSnackbarMSG] = useState('');
+  const [infoMSG, setInfoMSG] = useState('');
   const [referringId, setReferringId] = useState<string | null>(null);
   const [searchExpanded, setSearchExpanded] = useState(true);
 
@@ -107,20 +110,27 @@ export default function FindShipmentPage() {
 
     setLoading(true);
     try {
-      // بررسی موقعیت کاربر قبل از جستجو
-      const locationCheck = await validateUserLocation(selectedWarehouseId);
-      
-      if (!locationCheck.isInRange) {
-        const warehouse = locationCheck.warehouse as { name: string } | null;
-        const warehouseName = warehouse?.name || 'انبار انتخابی';
-        const distanceText = locationCheck.distance 
-          ? `فاصله شما از ${warehouseName}: ${(locationCheck.distance * 1000).toFixed(0)} متر`
-          : '';
-        setError(`شما در محدوده ${warehouseName} قرار ندارید. برای جستجوی بارنامه باید در فاصله حداکثر 500 متری انبار باشید. ${distanceText}`);
-        setSnackbarMSG(`شما در محدوده ${warehouseName} قرار ندارید. برای جستجوی بارنامه باید در فاصله حداکثر 500 متری انبار باشید. ${distanceText}`);
-        setErrorSBOpen(true);
-        setLoading(false);
-        return;
+      // بررسی allow_clear از localStorage
+      const allowClear = localStorage.getItem('uAllowClear');
+      // اگر allow_clear برابر 1 نباشد، باید لوکیشن را چک کنیم
+      if (allowClear !== '1') {
+        // بررسی موقعیت کاربر قبل از جستجو
+        const locationCheck = await validateUserLocation(selectedWarehouseId);
+        
+        if (!locationCheck.isInRange) {
+          const warehouse = locationCheck.warehouse as { name: string } | null;
+          const warehouseName = warehouse?.name || 'انبار انتخابی';
+          const distanceText = locationCheck.distance 
+            ? `فاصله شما از ${warehouseName}: ${(locationCheck.distance * 1000).toFixed(0)} متر`
+            : '';
+          setError(`شما در محدوده ${warehouseName} قرار ندارید. برای جستجوی بارنامه باید در فاصله حداکثر 500 متری انبار باشید. ${distanceText}`);
+          setSnackbarMSG(`شما در محدوده ${warehouseName} قرار ندارید. برای جستجوی بارنامه باید در فاصله حداکثر 500 متری انبار باشید. ${distanceText}`);
+          setInfoMSG('برای باز شدن دسترسی به مسئول انبار مراجعه کنید');
+          setErrorSBOpen(true);
+          setInfoSBOpen(true);
+          setLoading(false);
+          return;
+        }
       }
 
       const body = {
@@ -147,6 +157,7 @@ export default function FindShipmentPage() {
           price: shipment.final_price ? parseFloat(shipment.final_price) : shipment.price,
           status: shipment.shipment_status_id ? parseInt(shipment.shipment_status_id) : shipment.status,
           statusTitle: shipment.status_title || shipment.statusTitle,
+          pay_by: shipment.pay_by,
         }));
         setResults(mappedShipments);
         // بستن بخش جستجو بعد از پیدا شدن نتایج
@@ -164,9 +175,11 @@ export default function FindShipmentPage() {
       }
     } catch (err: any) {
       // اگر خطا مربوط به موقعیت باشد، پیام مناسب نمایش داده می‌شود
-      if (err.message && err.message.includes('موقعیت')) {
+      if (err.message && (err.message.includes('موقعیت') || err.message.includes('دسترسی') || err.message.includes('زمان'))) {
         setError(err.message);
         setSnackbarMSG(err.message);
+        setInfoMSG('برای باز شدن دسترسی به مسئول انبار مراجعه کنید');
+        setInfoSBOpen(true);
       } else {
         setError('خطا در ارتباط با سرور');
         setSnackbarMSG('خطا در ارتباط با سرور');
@@ -239,10 +252,13 @@ export default function FindShipmentPage() {
       <SnackbarComp
         succesSBOpen={successSBOpen}
         errorSBOpen={errorSBOpen}
+        infoSBOpen={infoSBOpen}
         snackbarMSG={snackbarMSG}
+        infoMSG={infoMSG}
         onClose={() => {
           setSuccessSBOpen(false);
           setErrorSBOpen(false);
+          setInfoSBOpen(false);
         }}
       />
     </Box>

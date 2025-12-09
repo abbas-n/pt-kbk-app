@@ -48,6 +48,7 @@ export default function LoginPage() {
         localStorage.setItem('uID', res.data.user.id);
         localStorage.setItem('uName', res.data.user.name);
         localStorage.setItem('uMobile', res.data.user.mobile);
+        localStorage.setItem('uAllowClear', res.data.user.allow_clear.toString());
         localStorage.setItem('uNationalCode', res.data.user.nationalCode);
         localStorage.setItem('uKargoId', formData.kargoId);
         router.push("/panel/find-shipment");

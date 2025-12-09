@@ -18,8 +18,10 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloseIcon from '@mui/icons-material/Close';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import StatusBadge from './StatusBadge';
 import ShipmentInfoField from './ShipmentInfoField';
+import { thousandDivider } from '../../../../utils/Helper';
 
 interface Shipment {
   ID?: string;
@@ -32,6 +34,8 @@ interface Shipment {
   destination?: string;
   status?: number | string;
   statusTitle?: string;
+  pay_by?: string;
+  price?: number;
 }
 
 interface ShipmentCardProps {
@@ -173,6 +177,24 @@ export default function ShipmentCard({ shipment, referringId, onRefer }: Shipmen
                 value={shipment.destination}
                 icon={<LocationOnIcon sx={{ color: 'white', fontSize: 20 }} />}
                 iconBgColor="warning.main"
+              />
+            )}
+
+            {shipment.pay_by && (
+              <ShipmentInfoField
+                label="نوع پرداخت"
+                value={shipment.pay_by === 'Sender' ? 'پیش کرایه' : 'پس کرایه'}
+                icon={<AttachMoneyIcon sx={{ color: 'white', fontSize: 20 }} />}
+                iconBgColor={shipment.pay_by === 'Sender' ? 'success.main' : 'error.main'}
+              />
+            )}
+
+            {shipment.pay_by === 'Receiver' && shipment.price !== undefined && shipment.price !== null && (
+              <ShipmentInfoField
+                label="مبلغ"
+                value={`${thousandDivider(Math.round(shipment.price))} تومان`}
+                icon={<AttachMoneyIcon sx={{ color: 'white', fontSize: 20 }} />}
+                iconBgColor="error.main"
               />
             )}
           </Grid>

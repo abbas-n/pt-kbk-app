@@ -5,14 +5,18 @@ import { Alert, Snackbar } from '@mui/material'
 type snackDataType = {
     succesSBOpen: boolean,
     errorSBOpen: boolean,
+    infoSBOpen?: boolean,
     snackbarMSG: string,
+    infoMSG?: string,
     onClose: () => void
 }
 
 function SnackbarComp({
     succesSBOpen,
     errorSBOpen,
+    infoSBOpen = false,
     snackbarMSG,
+    infoMSG = '',
     onClose
 }: snackDataType) {
 
@@ -42,6 +46,19 @@ function SnackbarComp({
                     sx={{ width: '100%' }}
                 >
                     {snackbarMSG}
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                open={infoSBOpen}
+                autoHideDuration={6000}
+                onClose={onClose}
+            >
+                <Alert
+                    severity="info"
+                    variant="filled"
+                    sx={{ width: '100%' }}
+                >
+                    {infoMSG || snackbarMSG}
                 </Alert>
             </Snackbar>
         </>
